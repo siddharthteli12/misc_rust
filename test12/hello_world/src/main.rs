@@ -1,34 +1,41 @@
+use std::io::stdin;
+use std::io::stdout;
+use std::io::Write;
 use std::sync::Arc;
+use std::sync::Condvar;
 use std::sync::Mutex;
+use std::sync::MutexGuard;
 use std::thread;
 use std::time::Duration;
-
 fn main() {
-    let signal1 = Arc::new(Mutex::new(false));
-    let signal2 = Arc::clone(&signal1);
-    // thread to write hello.
-    let handler1 = thread::spawn(move || loop {
-        {
-            let mut signal = signal2.lock().unwrap();
-            if !*signal {
+    let condition = Condvar::new();
+    let flag = Mutex::new(false);
+    thread::scope(|s| {
+        // Thread 1: Print hello and notify.
+        s.spawn(|| loop {
+            let mut flag = flag.lock().unwrap();
+            if !*flag {
                 print!("Hello");
-                *signal = true;
+                *flag = true;
+                condition.notify_one();
             }
-        }
-        thread::sleep(Duration::from_secs(1));
+            drop(flag);
+            thread::sleep(Duration::from_secs(1));
+        });
+
+        // Thread 2: Print world and park.
+        s.spawn(|| {
+            let mut flag = flag.lock().unwrap();
+            loop {
+                if *flag {
+                    println!("World");
+                    *flag = false;
+                }
+                flag = condition.wait(flag).unwrap();
+                thread::sleep(Duration::from_secs(1));
+            }
+        });
     });
 
-    let handler2 = thread::spawn(move || loop {
-        {
-            let mut signal = signal1.lock().unwrap();
-            if *signal {
-                println!("World");
-                *signal = false;
-            }
-        }
-        thread::sleep(Duration::from_secs(1));
-    });
-
-    handler1.join().unwrap();
-    handler2.join().unwrap();
+    thread::sleep(Duration::from_secs(10));
 }
