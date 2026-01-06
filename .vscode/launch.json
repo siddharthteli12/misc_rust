@@ -1,0 +1,119 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'arc'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=arc",
+                    "--package=custom_impl"
+                ],
+                "filter": {
+                    "name": "arc",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'arc'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=arc",
+                    "--package=custom_impl"
+                ],
+                "filter": {
+                    "name": "arc",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'custom_impl'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=custom_impl",
+                    "--package=custom_impl"
+                ],
+                "filter": {
+                    "name": "custom_impl",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'custom_impl'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=custom_impl",
+                    "--package=custom_impl"
+                ],
+                "filter": {
+                    "name": "custom_impl",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'expression'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=expression",
+                    "--package=expression"
+                ],
+                "filter": {
+                    "name": "expression",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'expression'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=expression",
+                    "--package=expression"
+                ],
+                "filter": {
+                    "name": "expression",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}
