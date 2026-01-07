@@ -1,5 +1,6 @@
 use std::{
     cell::UnsafeCell,
+    hint,
     ops::{Deref, DerefMut},
     sync::atomic::{AtomicBool, fence},
 };
@@ -44,8 +45,20 @@ impl<T> Mutex<T> {
     }
 
     pub fn lock(&self) -> MutexGuard<'_, T> {
-        fence(std::sync::atomic::Ordering::Acquire);
-        self.lock.store(true, std::sync::atomic::Ordering::Relaxed);
+        // If lock is true keep waiting forever.
+
+        while self
+            .lock
+            .compare_exchange(
+                false,
+                true,
+                std::sync::atomic::Ordering::Relaxed,
+                std::sync::atomic::Ordering::Relaxed,
+            )
+            .is_err()
+        {
+            hint::spin_loop();
+        }
         MutexGuard { ref_ptr: &self }
     }
 
